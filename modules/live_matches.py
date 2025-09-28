@@ -50,7 +50,7 @@ def fetch_scorecard(match_id):
                     "4s": b["fours"],
                     "6s": b["sixes"],
                     "SR": float(b["strkrate"]),
-                    "Dismissal": b["outdec"] or "Not Out",
+                    "Dismissal": b["outdec"] or "Do not Bat",
                 }
                 for b in match_scard.get("batsman", [])
             ]
