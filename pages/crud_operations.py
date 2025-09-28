@@ -1,3 +1,7 @@
+import sys
+import os
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 import pandas as pd
 import psycopg2
 import streamlit as st
@@ -160,69 +164,70 @@ def delete_data(player_id, confirmation_text):
 # -------------------
 # Streamlit UI
 # -------------------
-st.set_page_config(page_title="Cricket CRUD", page_icon="🏏", layout="wide")
-st.title("🏏 Cricket Player Stats - CRUD Dashboard")
+def show_crud_operations():
+    st.set_page_config(page_title="Cricket CRUD", page_icon="🏏", layout="wide")
+    st.title("🏏 Cricket Player Stats - CRUD Dashboard")
 
-tab1, tab2, tab3, tab4 = st.tabs(["➕ Insert", "📖 Read", "✏️ Update", "🗑️ Delete"])
+    tab1, tab2, tab3, tab4 = st.tabs(["➕ Insert", "📖 Read", "✏️ Update", "🗑️ Delete"])
 
-# INSERT
-with tab1:
-    st.subheader("Insert New Player")
-    with st.form("insert_form", clear_on_submit=True):
-        c1, c2 = st.columns(2)
-        with c1:
-            player_id = st.number_input("Player ID", step=1)
-            player_name = st.text_input("Player Name")
-            matches = st.number_input("Matches", step=1)
-        with c2:
-            innings = st.number_input("Innings", step=1)
-            runs = st.number_input("Runs", step=1)
-            average = st.number_input("Average", format="%.2f")
-        submit = st.form_submit_button("Insert Player 🚀")
-        if submit:
-            insert_data(player_id, player_name, matches, innings, runs, average)
+    # INSERT
+    with tab1:
+        st.subheader("Insert New Player")
+        with st.form("insert_form", clear_on_submit=True):
+            c1, c2 = st.columns(2)
+            with c1:
+                player_id = st.number_input("Player ID", step=1)
+                player_name = st.text_input("Player Name")
+                matches = st.number_input("Matches", step=1)
+            with c2:
+                innings = st.number_input("Innings", step=1)
+                runs = st.number_input("Runs", step=1)
+                average = st.number_input("Average", format="%.2f")
+            submit = st.form_submit_button("Insert Player 🚀")
+            if submit:
+                insert_data(player_id, player_name, matches, innings, runs, average)
 
-# READ
-with tab2:
-    st.subheader("Search Players")
-    search_id = st.text_input("Search by Player ID")
-    search_name = st.text_input("Search by Player Name")
-    df = read_data(
-        player_id=int(search_id) if search_id.strip().isdigit() else None,
-        player_name=search_name if search_name.strip() else None,
-    )
-    st.dataframe(df, use_container_width=True)
-
-# UPDATE
-with tab3:
-    st.subheader("Update Player Data")
-    with st.form("update_form"):
-        player_id = st.number_input("Player ID (to update)", step=1)
-        st.markdown("👉 Leave any field blank if you don't want to update it")
-        player_name = st.text_input("New Player Name (optional)")
-        matches = st.number_input("Matches (optional)", step=1, value=0)
-        innings = st.number_input("Innings (optional)", step=1, value=0)
-        runs = st.number_input("Runs (optional)", step=1, value=0)
-        average = st.number_input("Average (optional)", format="%.2f", value=0.00)
-        submit = st.form_submit_button("Update Player ✏️")
-        if submit:
-            update_data(
-                player_id,
-                player_name if player_name else None,
-                matches if matches > 0 else None,
-                innings if innings > 0 else None,
-                runs if runs > 0 else None,
-                average if average > 0 else None,
-            )
-
-# DELETE
-with tab4:
-    st.subheader("Delete Player")
-    with st.form("delete_form"):
-        player_id = st.number_input("Player ID (to delete)", step=1)
-        confirmation_text = st.text_input(
-            "Type confirmation (e.g., Delete Virat Kohli)"
+    # READ
+    with tab2:
+        st.subheader("Search Players")
+        search_id = st.text_input("Search by Player ID")
+        search_name = st.text_input("Search by Player Name")
+        df = read_data(
+            player_id=int(search_id) if search_id.strip().isdigit() else None,
+            player_name=search_name if search_name.strip() else None,
         )
-        submit = st.form_submit_button("Delete Player 🗑️")
-        if submit:
-            delete_data(player_id, confirmation_text)
+        st.dataframe(df, use_container_width=True)
+
+    # UPDATE
+    with tab3:
+        st.subheader("Update Player Data")
+        with st.form("update_form"):
+            player_id = st.number_input("Player ID (to update)", step=1)
+            st.markdown("👉 Leave any field blank if you don't want to update it")
+            player_name = st.text_input("New Player Name (optional)")
+            matches = st.number_input("Matches (optional)", step=1, value=0)
+            innings = st.number_input("Innings (optional)", step=1, value=0)
+            runs = st.number_input("Runs (optional)", step=1, value=0)
+            average = st.number_input("Average (optional)", format="%.2f", value=0.00)
+            submit = st.form_submit_button("Update Player ✏️")
+            if submit:
+                update_data(
+                    player_id,
+                    player_name if player_name else None,
+                    matches if matches > 0 else None,
+                    innings if innings > 0 else None,
+                    runs if runs > 0 else None,
+                    average if average > 0 else None,
+                )
+
+    # DELETE
+    with tab4:
+        st.subheader("Delete Player")
+        with st.form("delete_form"):
+            player_id = st.number_input("Player ID (to delete)", step=1)
+            confirmation_text = st.text_input(
+                "Type confirmation (e.g., Delete Virat Kohli)"
+            )
+            submit = st.form_submit_button("Delete Player 🗑️")
+            if submit:
+                delete_data(player_id, confirmation_text)

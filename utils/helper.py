@@ -6,14 +6,13 @@ import os
 
 # Add the parent directory to sys.path so Python can find config.py
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from config import RAPIDAPI_HOST, RAPIDAPI_KEY
+from config import HEADERS
 import streamlit as st
 
 
 def fetch_api_data(url, params={}):
     try:
-        headers = {"x-rapidapi-key": RAPIDAPI_KEY, "x-rapidapi-host": RAPIDAPI_HOST}
-        response = requests.get(url, headers=headers, params=params)
+        response = requests.get(url, headers=HEADERS, params=params)
         response.raise_for_status()  # Raise an error for bad responses
         return response.json()
     except requests.exceptions.RequestException as e:
@@ -37,7 +36,7 @@ cricket_players_list = [
     "Mohammed Shami",
     "Mohammed Siraj",
     "Kuldeep Yadav",
-    "Steve Smith",
+    "Steven Smith",
     "David Warner",
     "Travis Head",
     "Marnus Labuschagne",
@@ -66,4 +65,21 @@ cricket_players_list = [
     "Trent Boult",
     "Tim Southee",
     "Mitchell Santner",
+]
+
+
+VENUE_IDS = [19, 50, 87, 31, 335, 512, 80, 132, 34, 22]
+PLAYER_ID_SEED = [
+    "1413",
+    "265",
+    "9311",
+    "1739",
+    "7662",
+    "8095",
+    "8019",
+    "2258",
+    "6557",
+    "8359",
+    "12160",
+    "6326",
 ]

@@ -9,13 +9,9 @@ DB_CONFIG = {
     "port": 5432,
 }
 
-
 # API Credentials
-RAPIDAPI_KEY = "b991531185msh7f712198be1c663p121937jsnd531dcd49a71"
-RAPIDAPI_HOST = "cricbuzz-cricket.p.rapidapi.com"
-
 HEADERS = {
-    "x-rapidapi-key": "b991531185msh7f712198be1c663p121937jsnd531dcd49a71",
+    "x-rapidapi-key": "62371bd802msh1aff245accb6d74p110b6bjsn82188bdbc6c5",
     "x-rapidapi-host": "cricbuzz-cricket.p.rapidapi.com",
 }
 
@@ -38,3 +34,4 @@ PLAYER_BOWLING_URL = (
     "https://cricbuzz-cricket.p.rapidapi.com/stats/v1/player/{player_id}/bowling"
 )
 TOPSTATS = "https://cricbuzz-cricket.p.rapidapi.com/stats/v1/topstats/0"
+VENUES = "https://cricbuzz-cricket.p.rapidapi.com/venues/v1/{venue_id}"

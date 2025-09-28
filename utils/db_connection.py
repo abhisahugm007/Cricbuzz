@@ -13,7 +13,7 @@ conn = psycopg2.connect(**DB_CONFIG)
 cur = conn.cursor()
 
 
-# Create all tables
+# Create all tables if not exsists
 create_all_tables(cur)
 
 # Commit changes and close connection
