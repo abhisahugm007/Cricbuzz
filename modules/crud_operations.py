@@ -203,7 +203,7 @@ def show_crud_operations():
         st.subheader("Update Player Data")
         with st.form("update_form"):
             player_id = st.number_input("Player ID (to update)", step=1)
-            st.markdown("👉 Leave any field blank if you don't want to update it")
+            st.markdown("👉 Leave optional field blank if you don't want to update it")
             player_name = st.text_input("New Player Name (optional)")
             matches = st.number_input("Matches (optional)", step=1, value=0)
             innings = st.number_input("Innings (optional)", step=1, value=0)

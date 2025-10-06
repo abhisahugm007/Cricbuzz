@@ -121,75 +121,85 @@ def show_top_stats():
             # -------------------------------
             with tab2:
                 excluded_rows = ["Balls", "Not Out", "Ducks", "300s", "400s"]
-                batting_values = batting_data.get("values", [])
-                filtered_batting = [
-                    row["values"]
-                    for row in batting_values
-                    if row["values"][0] not in excluded_rows
-                ]
+                if not batting_data or "values" not in batting_data:
+                    st.warning("No batting data available for this player.")
+                else:
+                    batting_values = batting_data.get("values", [])
+                    filtered_batting = [
+                        row["values"]
+                        for row in batting_values
+                        if row["values"][0] not in excluded_rows
+                    ]
 
-                batting_df = pd.DataFrame(
-                    [row[1:] for row in filtered_batting],
-                    columns=["Test", "ODI", "T20", "IPL"],
-                    index=[row[0] for row in filtered_batting],
-                )
+                    batting_df = pd.DataFrame(
+                        [row[1:] for row in filtered_batting],
+                        columns=["Test", "ODI", "T20", "IPL"],
+                        index=[row[0] for row in filtered_batting],
+                    )
 
-                st.markdown("### 🏏 Batting Career Summary")
-                if "Matches" in batting_df.index:
-                    total_matches = pd.to_numeric(
-                        batting_df.loc["Matches"], errors="coerce"
-                    ).sum()
-                    st.metric("Total Matches", int(total_matches))
-                if "Runs" in batting_df.index:
-                    total_runs = pd.to_numeric(
-                        batting_df.loc["Runs"], errors="coerce"
-                    ).sum()
-                    st.metric("Total Runs", int(total_runs))
+                    st.markdown("### 🏏 Batting Career Summary")
+                    if "Matches" in batting_df.index:
+                        total_matches = pd.to_numeric(
+                            batting_df.loc["Matches"], errors="coerce"
+                        ).sum()
+                        st.metric("Total Matches", int(total_matches))
+                    if "Runs" in batting_df.index:
+                        total_runs = pd.to_numeric(
+                            batting_df.loc["Runs"], errors="coerce"
+                        ).sum()
+                        st.metric("Total Runs", int(total_runs))
 
-                avg = batting_df.loc["Average"] if "Average" in batting_df.index else {}
-                sr = batting_df.loc["SR"] if "SR" in batting_df.index else {}
+                    avg = (
+                        batting_df.loc["Average"]
+                        if "Average" in batting_df.index
+                        else {}
+                    )
+                    sr = batting_df.loc["SR"] if "SR" in batting_df.index else {}
 
-                st.markdown(
-                    f"**Average:** Test - {avg.get('Test', '')}, ODI - {avg.get('ODI', '')}, T20 - {avg.get('T20', '')}, IPL - {avg.get('IPL', '')}"
-                )
-                st.markdown(
-                    f"**Strike Rate:** Test - {sr.get('Test', '')}, ODI - {sr.get('ODI', '')}, T20 - {sr.get('T20', '')}, IPL - {sr.get('IPL', '')}"
-                )
+                    st.markdown(
+                        f"**Average:** Test - {avg.get('Test', '')}, ODI - {avg.get('ODI', '')}, T20 - {avg.get('T20', '')}, IPL - {avg.get('IPL', '')}"
+                    )
+                    st.markdown(
+                        f"**Strike Rate:** Test - {sr.get('Test', '')}, ODI - {sr.get('ODI', '')}, T20 - {sr.get('T20', '')}, IPL - {sr.get('IPL', '')}"
+                    )
 
-                st.markdown("### 📊 Batting Career Statistics")
-                st.dataframe(batting_df, use_container_width=True)
+                    st.markdown("### 📊 Batting Career Statistics")
+                    st.dataframe(batting_df, use_container_width=True)
 
             # -------------------------------
             # 🎯 Bowling Stats Tab
             # -------------------------------
             with tab3:
-                bowling_values = bowling_data.get("values", [])
-                bowling_df = pd.DataFrame(
-                    [row["values"][1:] for row in bowling_values],
-                    columns=["Test", "ODI", "T20", "IPL"],
-                    index=[row["values"][0] for row in bowling_values],
-                )
+                if not bowling_data or "values" not in bowling_data:
+                    st.warning("No Bowling data available for this player.")
+                else:
+                    bowling_values = bowling_data.get("values", [])
+                    bowling_df = pd.DataFrame(
+                        [row["values"][1:] for row in bowling_values],
+                        columns=["Test", "ODI", "T20", "IPL"],
+                        index=[row["values"][0] for row in bowling_values],
+                    )
 
-                st.markdown("### 🎯 Bowling Career Summary")
-                if "Wickets" in bowling_df.index:
-                    total_wickets = pd.to_numeric(
-                        bowling_df.loc["Wickets"], errors="coerce"
-                    ).sum()
-                    st.metric("Total Wickets", int(total_wickets))
+                    st.markdown("### 🎯 Bowling Career Summary")
+                    if "Wickets" in bowling_df.index:
+                        total_wickets = pd.to_numeric(
+                            bowling_df.loc["Wickets"], errors="coerce"
+                        ).sum()
+                        st.metric("Total Wickets", int(total_wickets))
 
-                bbi = bowling_df.loc["BBI"] if "BBI" in bowling_df.index else {}
-                avg = bowling_df.loc["Avg"] if "Avg" in bowling_df.index else {}
-                eco = bowling_df.loc["Eco"] if "Eco" in bowling_df.index else {}
+                    bbi = bowling_df.loc["BBI"] if "BBI" in bowling_df.index else {}
+                    avg = bowling_df.loc["Avg"] if "Avg" in bowling_df.index else {}
+                    eco = bowling_df.loc["Eco"] if "Eco" in bowling_df.index else {}
 
-                st.markdown(
-                    f"**Best Bowling:** Test - {bbi.get('Test', '')}, ODI - {bbi.get('ODI', '')}, T20 - {bbi.get('T20', '')}, IPL - {bbi.get('IPL', '')}"
-                )
-                st.markdown(
-                    f"**Average:** Test - {avg.get('Test', '')}, ODI - {avg.get('ODI', '')}, T20 - {avg.get('T20', '')}, IPL - {avg.get('IPL', '')}"
-                )
-                st.markdown(
-                    f"**Economy:** Test - {eco.get('Test', '')}, ODI - {eco.get('ODI', '')}, T20 - {eco.get('T20', '')}, IPL - {eco.get('IPL', '')}"
-                )
+                    st.markdown(
+                        f"**Best Bowling:** Test - {bbi.get('Test', '')}, ODI - {bbi.get('ODI', '')}, T20 - {bbi.get('T20', '')}, IPL - {bbi.get('IPL', '')}"
+                    )
+                    st.markdown(
+                        f"**Average:** Test - {avg.get('Test', '')}, ODI - {avg.get('ODI', '')}, T20 - {avg.get('T20', '')}, IPL - {avg.get('IPL', '')}"
+                    )
+                    st.markdown(
+                        f"**Economy:** Test - {eco.get('Test', '')}, ODI - {eco.get('ODI', '')}, T20 - {eco.get('T20', '')}, IPL - {eco.get('IPL', '')}"
+                    )
 
-                st.markdown("### 📊 Bowling Career Statistics")
-                st.dataframe(bowling_df, use_container_width=True)
+                    st.markdown("### 📊 Bowling Career Statistics")
+                    st.dataframe(bowling_df, use_container_width=True)

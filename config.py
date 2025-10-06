@@ -11,11 +11,13 @@ DB_CONFIG = {
 
 # API Credentials
 HEADERS = {
-    "x-rapidapi-key": "62371bd802msh1aff245accb6d74p110b6bjsn82188bdbc6c5",
+    "x-rapidapi-key": "06226fac4emsh7850a347e1c75e5p186be3jsnd0705d383c6d",
     "x-rapidapi-host": "cricbuzz-cricket.p.rapidapi.com",
 }
 
 # API URL's
+RECENT_MATCHES_URL = "https://cricbuzz-cricket.p.rapidapi.com/matches/v1/recent"
+
 LIVE_URL = "https://cricbuzz-cricket.p.rapidapi.com/matches/v1/live"
 
 SERIES_URL = "https://cricbuzz-cricket.p.rapidapi.com/series/v1/international"

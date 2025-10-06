@@ -32,6 +32,7 @@ def fetch_live_matches():
                         "status": info.get("status"),
                     }
                 )
+    print(f"Fetched {matches} live matches.")
     return matches
 
 
@@ -87,41 +88,43 @@ def show_live_matches():
     st.set_page_config(page_title="Live Cricket Scores", layout="wide")
     st.title("🏏 Cricbuzz Live Match Dashboard")
 
-    # Fetch live matches
     matches = fetch_live_matches()
 
     if not matches:
         st.info("No live matches at the moment.")
-    else:
-        match_options = {
-            f"{m['team1']} vs {m['team2']} - {m['match_desc']}": m["match_id"]
-            for m in matches
-        }
+        return
 
-        selected_match = st.selectbox(
-            "Select a live match:", options=list(match_options.keys())
-        )
-        match_id = match_options[selected_match]
+    # 🔐 Ensure unique labels by embedding match_id
+    match_labels = [
+        f"{m['team1']} vs {m['team2']} - {m['match_desc']} ({m['match_format']}) [ID: {m['match_id']}]"
+        for m in matches
+    ]
+    match_map = {label: m for label, m in zip(match_labels, matches)}
 
-        st.markdown(f"### 📍 {selected_match}")
+    selected_label = st.selectbox("Select a live match:", options=match_labels)
+    selected_match = match_map[selected_label]
+    match_id = selected_match["match_id"]
+
+    # 🏟️ Match Info
+    st.markdown(f"### 📍 {selected_match['team1']} vs {selected_match['team2']}")
+    st.markdown(f"**Match Format:** {selected_match['match_format']}")
+    st.markdown(f"**Venue:** {selected_match['venue']}")
+    st.markdown(f"**Status:** {selected_match['status']}")
+
+    # 📊 Scorecard
+    scorecards = fetch_scorecard(match_id)
+    if not scorecards:
+        st.warning("No scorecard data available.")
+        return
+
+    for sc in scorecards:
+        st.subheader(f"Innings: {sc['Innings']}")
         st.markdown(
-            f"**Venue:** {next(m['venue'] for m in matches if m['match_id'] == match_id)}"
-        )
-        st.markdown(
-            f"**Status:** {next(m['status'] for m in matches if m['match_id'] == match_id)}"
+            f"**Score:** {sc['Score']} | **Run Rate:** {sc['Run Rate']} | **Extras:** {sc['Extras']}"
         )
 
-        # Fetch and display scorecard
-        scorecards = fetch_scorecard(match_id)
+        st.markdown("#### 🏏 Batting Scorecard")
+        st.dataframe(pd.DataFrame(sc["Batting"]), use_container_width=True)
 
-        for sc in scorecards:
-            st.subheader(f"Innings: {sc['Innings']}")
-            st.markdown(
-                f"**Score:** {sc['Score']} | **Run Rate:** {sc['Run Rate']} | **Extras:** {sc['Extras']}"
-            )
-
-            st.markdown("#### 🏏 Batting Scorecard")
-            st.dataframe(pd.DataFrame(sc["Batting"]), use_container_width=True)
-
-            st.markdown("#### 🎯 Bowling Scorecard")
-            st.dataframe(pd.DataFrame(sc["Bowling"]), use_container_width=True)
+        st.markdown("#### 🎯 Bowling Scorecard")
+        st.dataframe(pd.DataFrame(sc["Bowling"]), use_container_width=True)
